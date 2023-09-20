@@ -1,9 +1,8 @@
 import '@testing-library/jest-dom';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import * as nextAuthReact from 'next-auth/react';
-import { signIn } from 'next-auth/react';
 
-import { LoginForm } from '../../../src/components/auth/LoginForm';
+import { LoginForm } from '../../../src/components';
 
 jest.mock('usehooks-ts');
 jest.mock('next/navigation');
@@ -11,7 +10,7 @@ const nextAuthReactMocked = nextAuthReact as jest.Mocked<typeof nextAuthReact>;
 const useRouter = jest.spyOn(require('next/navigation'), 'useRouter');
 const signInMock = jest.spyOn(require('next-auth/react'), 'signIn');
 
-describe('Test in Login Page', () => {
+describe('Test in LoginForm', () => {
   beforeEach(async () => {
     useRouter.mockImplementation(() => ({
       back: jest.fn(),
@@ -231,7 +230,7 @@ describe('Test in Login Page', () => {
   });
 
   test('should Unexpected error, please try again later if response is undefined', async () => {
-    nextAuthReactMocked.signIn.mockImplementation(undefined);    
+    nextAuthReactMocked.signIn.mockImplementation(undefined);
 
     const { getByTestId } = render(<LoginForm />);
 
@@ -254,7 +253,7 @@ describe('Test in Login Page', () => {
     });
   });
 
-  test('should call google signIn with google param', () => { 
+  test('should call google signIn with google param', () => {
     const { getByTestId } = render(<LoginForm />);
 
     const googleButton = getByTestId('google-button');
@@ -262,9 +261,9 @@ describe('Test in Login Page', () => {
     fireEvent.click(googleButton);
 
     expect(signInMock).toHaveBeenCalledWith('google');
-   })
+  });
 
-  test('should call facebook signIn with facebook param', () => { 
+  test('should call facebook signIn with facebook param', () => {
     const { getByTestId } = render(<LoginForm />);
 
     const facebookButton = getByTestId('facebook-button');
@@ -272,5 +271,5 @@ describe('Test in Login Page', () => {
     fireEvent.click(facebookButton);
 
     expect(signInMock).toHaveBeenCalledWith('facebook');
-   })
+  });
 });

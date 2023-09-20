@@ -1,14 +1,11 @@
-import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 
-import Login from '../../../src/app/auth/page';
+import Login from '../../../../src/app/auth/login/page';
 
-jest.mock('usehooks-ts', () => ({
-  useMediaQuery: jest.fn().mockReturnValue(false), // Puedes ajustar el valor de retorno según tus necesidades
-}));
 jest.mock('next/navigation');
+jest.mock('usehooks-ts');
 
-describe('Test in <Login />', () => {
+describe('Test in <Login/>', () => {
   beforeEach(async () => {
     const useRouter = jest.spyOn(require('next/navigation'), 'useRouter');
 
@@ -23,16 +20,17 @@ describe('Test in <Login />', () => {
     }));
   });
 
-  test('should render login page', async () => {
+  test('Renders login page', () => {
     const { getByTestId } = render(<Login />);
 
-    const linkElement = getByTestId('login-page');
-    expect(linkElement).toBeInTheDocument();
+    const loginpageElement = getByTestId('login-page');
+    expect(loginpageElement).toBeInTheDocument();
   });
 
-  test('should render login form', async () => {
+  test('Renders LoginForm inside Login component', () => {
     const { getByTestId } = render(<Login />);
 
-    expect(getByTestId('login-form')).toBeInTheDocument();
+    const loginFormElement = getByTestId('login-form');
+    expect(loginFormElement).toBeInTheDocument();
   });
 });

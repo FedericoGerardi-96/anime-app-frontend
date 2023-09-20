@@ -1,12 +1,15 @@
-import { Button } from '@nextui-org/button';
+import { Suspense } from 'react';
+import { SeasonAnimeBanner } from '../components';
+import { SwiperSkeleton } from '../components';
 
 export default function Home() {
   return (
     <main
       data-testid='home-page'
-      className='flex min-h-screen flex-col items-center justify-between p-24'>
-      <h1>¡Bienvenido a mi página!</h1>
-      <Button>¡Hola!</Button>
+      className='min-h-screen container mx-auto px-10'>
+      <Suspense fallback={<SwiperSkeleton />}>
+        <SeasonAnimeBanner />
+      </Suspense>
     </main>
   );
 }

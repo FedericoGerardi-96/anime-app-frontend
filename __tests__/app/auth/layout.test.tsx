@@ -7,8 +7,8 @@ import {
   waitFor,
 } from '@testing-library/react';
 
-import RootLayout from '../../../src/app/auth/layout';
-import Login from '../../../src/app/auth/page';
+import RootLayout, {metadata} from '../../../src/app/auth/layout';
+import Login from '../../../src/app/auth/login/page';
 
 jest.mock('usehooks-ts', () => ({
   useMediaQuery: jest.fn().mockReturnValue(false), // Puedes ajustar el valor de retorno según tus necesidades
@@ -39,5 +39,21 @@ describe('Test in <RootLayout/>', () => {
 
     const linkElement = getByTestId('login-layout-page');
     expect(linkElement).toBeInTheDocument();
+  });
+
+  test('metadata should have the property "title"', () => {
+    expect(metadata).toHaveProperty('title');
+  });
+
+  test('metadata should have the property "description"', () => {
+    expect(metadata).toHaveProperty('description');
+  });
+
+  test('the property "title" of metadata should haven´t a null value', () => {
+    expect(metadata.title).toBeDefined();
+  });
+
+  test('the property "description" of metadata should haven´t a null value', () => {
+    expect(metadata.description).toBeDefined();
   });
 });

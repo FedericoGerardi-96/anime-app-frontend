@@ -1,8 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { default as NextLink } from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@nextui-org/button';
-import { Chip, Divider, Input } from '@nextui-org/react';
+import { Chip, Divider, Input, Link } from '@nextui-org/react';
 import { signIn } from 'next-auth/react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMediaQuery } from 'usehooks-ts';
@@ -24,7 +25,7 @@ export const LoginForm = () => {
   const router = useRouter();
 
   const [isVisible, setIsVisible] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string[] | null>(null);
   const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false);
   const mobileQuery = useMediaQuery('(max-width: 768px)');
 
@@ -49,15 +50,14 @@ export const LoginForm = () => {
       password,
       redirect: false,
     });
-
     if (!response) {
-      setError('Unexpected error, please try again later.');
+      setError(['Unexpected error, please try again later.']);
       return;
     }
     const { error } = response;
-
     if (error) {
-      setError(error);
+      const listErrors = error.split('-');
+      setError(listErrors);
       setIsLoadingButton(false);
       return;
     }
@@ -70,6 +70,17 @@ export const LoginForm = () => {
     setIsLoadingButton(true);
     signIn(provider);
     setIsLoadingButton(false);
+  };
+
+  const Errors = () => {
+    return error?.map((err, i) => {
+      if (err === '') return;
+      return (
+        <Chip key={i} data-testid='error-chip' color='danger'>
+          {err}
+        </Chip>
+      );
+    });
   };
 
   return (
@@ -124,7 +135,7 @@ export const LoginForm = () => {
                     variant={`${mobileQuery ? 'flat' : 'bordered'}`}
                     endContent={
                       <button
-                        className='focus:outline-none'
+                        className='focus:outline-none text-[1.5rem]'
                         type='button'
                         data-testid='button-eye'
                         onClick={toggleVisibility}>
@@ -159,11 +170,8 @@ export const LoginForm = () => {
               )}
             </div>
           </div>
-          {error && (
-            <Chip data-testid='error-chip' color='danger'>
-              {error}
-            </Chip>
-          )}
+          <div className='flex flex-col gap-4 justify-between'>{Errors()}</div>
+
           <Button
             data-testid='button-submit'
             isLoading={isLoadingButton}
@@ -174,6 +182,11 @@ export const LoginForm = () => {
             className='mt-6 md:text-2xl text-[1rem]'>
             Sign In
           </Button>
+          <div className='mt-4'>
+            <NextLink href='/auth/register' passHref legacyBehavior>
+              <Link>Don't have an account?</Link>
+            </NextLink>
+          </div>
         </form>
         <Divider className='my-4' />
         <p className='text-white'>Or continue with open acount</p>
